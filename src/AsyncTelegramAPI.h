@@ -428,9 +428,24 @@ public:
         return TelegramCore::is_command(in, command);
     }
 
-    // Проверка, входит ли chatId в белый список (список ID через запятую)
-    static bool isWhitelisted(const int64_t& chatId, const String& whiteList) {
+    // Проверка, входит ли chatId в белый список текущего объекта (whiteList)
+    bool isWhitelisted(const int64_t& chatId) const {
         return TelegramCore::isWhitelisted(chatId, whiteList);
+    }
+
+    // Проверка, входит ли chatId в указанную строку белого списка (список ID через запятую)
+    static bool isWhitelisted(const int64_t& chatId, const String& targetWhiteList) {
+        return TelegramCore::isWhitelisted(chatId, targetWhiteList);
+    }
+
+    // Извлечение первого ID из белого списка текущего объекта (whiteList)
+    int64_t extractFirstNumber() const {
+        return TelegramCore::extractFirstNumber(whiteList);
+    }
+
+    // Извлечение первого ID из указанной строки со списком
+    static int64_t extractFirstNumber(const String& targetWhiteList) {
+        return TelegramCore::extractFirstNumber(targetWhiteList);
     }
 
     // Проверка новых сообщений (вызывается в loop)

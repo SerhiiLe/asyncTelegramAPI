@@ -309,8 +309,10 @@ bot.sendMessage("Температура: 24.5 C", [](int64_t msgId) {
 | Метод | Описание |
 | :--- | :--- |
 | `static bool is_command(const String& in, const String& command)` | Поиск команды в начале текста с учетом или без символа `/` (например: `"start"` найдет и `"/start"`, и `"start"`). |
-| `static bool isWhitelisted(int64_t chatId, const String& whiteList)` | Проверка наличия `chatId` в строке белого списка. |
-| `static int64_t extractFirstNumber(String whiteList)` | Извлечение первого числового ID из строки белого списка. |
+| `bool isWhitelisted(int64_t chatId)` | Проверка, входит ли `chatId` в белый список текущего бота (`bot.whiteList`). |
+| `static bool isWhitelisted(int64_t chatId, const String& whiteList)` | Проверка наличия `chatId` в переданной строке белого списка. |
+| `int64_t extractFirstNumber()` | Извлечение первого числового ID из белого списка текущего бота (`bot.whiteList`). |
+| `static int64_t extractFirstNumber(const String& whiteList)` | Извлечение первого числового ID из переданной строки белого списка. |
 
 ---
 
