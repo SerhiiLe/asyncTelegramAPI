@@ -1,0 +1,22 @@
+{
+  "name": "asyncTelegramAPI",
+  "keywords": "telegram, API, Arduino, ESP8266, ESP32, async, non-blocking, FreeRTOS",
+  "description": "A lightweight, fully non-blocking asynchronous Telegram Bot API library for ESP8266 and ESP32 with zero external network dependencies.",
+  "homepage": "https://github.com/SerhiiLe/asyncTelegramAPI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SerhiiLe/asyncTelegramAPI"
+  },
+  "dependencies": [
+    {
+      "name": "bblanchon/ArduinoJson",
+      "version": "^7.0.0"
+    }
+  ],
+  "version": "1.0.0",
+  "frameworks": "arduino",
+  "platforms": [
+    "espressif8266",
+    "espressif32"
+  ]
+}
