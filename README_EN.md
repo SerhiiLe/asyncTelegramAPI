@@ -25,7 +25,8 @@ If your hardware uses a GSM/LTE or Ethernet module, use the synchronous library 
    - [Keyboard Menus [MENU]](#keyboard-menus-menu)
    - [Supergroup Topics](#supergroup-topics)
 6. [Memory Optimization & Debugging](#memory-optimization--debugging)
-7. [License](#license)
+7. [Migration from microTelegramAPI](#migration-from-microtelegramapi)
+8. [License](#license)
 
 ---
 
@@ -371,6 +372,20 @@ To enable verbose debug output to `Serial`, define `#define DEBUG` **before incl
 - The compiler strips 100% of debug format strings and checks from the binary.
 - **Savings:** On ESP8266, firmware size is reduced by over **6.1 KB Flash**, and 0 bytes of RAM are consumed by debug string constants.
 - All internal string constants and JSON keys are stored directly in Flash memory via `F()` and `PSTR()`.
+
+---
+
+## Migration from microTelegramAPI
+
+Both libraries share the same core methods, so adapting your existing sketch code should be straightforward. However, there are several key differences to keep in mind:
+- **Code Size & Complexity:** The code of `asyncTelegramAPI` is more complex and roughly twice the size of `microTelegramAPI` (~700 additional lines of code and ~2.5 KB added to the compiled sketch size).
+- **RAM Overhead for Long Polling:** To operate in Long Polling mode (which ensures instant reaction to incoming messages), the system must keep approximately 9 KB in RAM for active TLS connection and socket buffers. On ESP8266, you should monitor your free heap carefully.
+- **Continuous Execution & Lifecycle:** Unlike `microTelegramAPI`, `bot.tick()` must be called continuously inside `loop()` (unless running in ESP32 FreeRTOS task mode), rather than only when you expect an event. To initiate the polling and dispatch lifecycle, calling `bot.start()` is mandatory; without it, the request and response lifecycle is not formed. In `microTelegramAPI`, there is no internal background loop — requests execute synchronously whenever you invoke them.
+- **Automatic Connection Tracking:** The library tracks Internet connectivity automatically, so you do not need to manually restrict polling when disconnected.
+- **Built-in Outbox Queue:** Because the library is fully asynchronous, both receiving and sending use an internal 32-message queue (including on ESP8266). You do not need to implement custom outgoing queues.
+- **Minor API Differences:** Although most methods share compatible syntax and usage patterns, minor differences exist. When in doubt, consult this documentation and the provided examples.
+
+`asyncTelegramAPI` is designed to be faster and more convenient on ESP8266 and ESP32 over Wi-Fi. However, `microTelegramAPI` is lighter and truly transport-agnostic (working over GSM, LTE, Ethernet, etc.). They serve different use cases, while sharing a common philosophy: maximum simplicity without unnecessary bloat that is never used in real-world IoT systems.
 
 ---
 
