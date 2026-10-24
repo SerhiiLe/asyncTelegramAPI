@@ -3,7 +3,7 @@
 [![PlatformIO](https://img.shields.io/badge/PlatformIO-Compatible-orange.svg)](https://platformio.org/)
 [![Framework](https://img.shields.io/badge/Framework-Arduino-blue.svg)](https://www.arduino.cc/)
 [![License: LGPL 3.0](https://img.shields.io/badge/License-LGPL_3.0-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](library.properties)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](library.properties)
 
 A fast, lightweight, and fully non-blocking Telegram Bot API library for **ESP8266** and **ESP32** via Wi-Fi.  
 📖 **[Документация на русском языке (README.md)](README.md)**
