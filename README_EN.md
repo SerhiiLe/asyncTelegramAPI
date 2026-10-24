@@ -268,6 +268,21 @@ bot.sendMessage("Temperature: 24.5 C", [](int64_t msgId) {
 });
 ```
 
+> 💡 **Configuring Queue Capacity (`QUEUE_SIZE`)**  
+> By default, the outbound transmission queue limit is `32` messages (`const size_t MAX_TX_QUEUE = QUEUE_SIZE`).  
+> You can customize this threshold to suit your hardware resources:
+> - In code prior to including the header:
+>   ```cpp
+>   #define QUEUE_SIZE 16
+>   #include <AsyncTelegramAPI.h>
+>   ```
+> - Or in `platformio.ini` via build flags:
+>   ```ini
+>   build_flags = -DQUEUE_SIZE=16
+>   ```
+> **Memory Consumption:**  
+> The queue utilizes `std::queue` (`std::deque`) and allocates memory dynamically only as items are enqueued (an empty queue requires only ~40 bytes). A single queued message uses approximately **~120 bytes of RAM** (`TxItem` struct ~64 bytes + dynamic string buffer). At maximum default capacity (32 items), peak heap consumption is approximately **~3.8 KB RAM**. On memory-constrained devices (such as ESP8266), the queue size can be safely lowered to `8`–`16`.
+
 ---
 
 ### 5. Editing & Deleting

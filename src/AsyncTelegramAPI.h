@@ -21,6 +21,10 @@
     #error "Platform not supported! Only ESP8266 and ESP32 are supported."
 #endif
 
+#ifndef QUEUE_SIZE
+#define QUEUE_SIZE 32
+#endif
+
 #ifdef LOG_TELEGRAM_API
 #undef LOG_TELEGRAM_API
 #endif
@@ -80,6 +84,11 @@ public:
 #if defined(ESP32)
     // Запуск работы бота с сетью (и фоновой задачи FreeRTOS, если включен useTask)
     bool start(BaseType_t core = 1, uint32_t stackSize = 8192, UBaseType_t priority = 1) {
+#else
+    // Запуск работы бота с сетью на ESP8266
+    bool start(int core = 1, uint32_t stackSize = 8192, int priority = 1) {
+        (void)core; (void)stackSize; (void)priority;
+#endif
         _started = true;
         _state = TG_IDLE;
         _lastPollEndTime = 0;
@@ -89,6 +98,8 @@ public:
         _forcePoll = (_longPollTimeout > 0 || _pollInterval > 0);
         _pauseUntil = 0;
         _activeUntil = 0;
+
+#if defined(ESP32)
 
         if (_useTask) {
             if (_taskHandle != nullptr) return true; // Уже запущена
@@ -110,21 +121,6 @@ public:
                 return false;
             }
         }
-        return true;
-    }
-#else
-    // Запуск работы бота с сетью на ESP8266
-    bool start(int core = 1, uint32_t stackSize = 8192, int priority = 1) {
-        (void)core; (void)stackSize; (void)priority;
-        _started = true;
-        _state = TG_IDLE;
-        _lastPollEndTime = 0;
-        _lastConnectAttempt = 0;
-        _lastError = TG_OK;
-        _tickStatus = 0;
-        _forcePoll = (_longPollTimeout > 0 || _pollInterval > 0);
-        _pauseUntil = 0;
-        _activeUntil = 0;
         return true;
     }
 #endif
@@ -567,7 +563,7 @@ private:
     bool _connectionClose = false;
 
     std::queue<TxItem> _txQueue;
-    const size_t MAX_TX_QUEUE = 32;
+    const size_t MAX_TX_QUEUE = QUEUE_SIZE;
 
 #if defined(ESP32)
     bool _useTask = false;
