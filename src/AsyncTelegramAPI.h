@@ -121,9 +121,9 @@ public:
                 return false;
             }
         }
+#endif
         return true;
     }
-#endif
 
     // Полная остановка работы бота (сеть, сокет, задача FreeRTOS)
     bool stop() {
