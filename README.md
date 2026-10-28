@@ -242,9 +242,10 @@ void loop() {
 
 | Метод | Описание |
 | :--- | :--- |
-| `void setLongPoll(uint8_t timeoutSeconds)` | Установка таймаута Long Polling (от 10 до 50 секунд). `0` отключает Long Polling (переход на short polling). |
-| `void setInterval(uint32_t intervalSeconds)` | Период опроса для short polling в секундах (например, `60` или `300`). |
-| `void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20)` | Включение интерактивного окна. На `windowSeconds` секунд после входящей команды бот переходит в быстрый Long Polling (`fastLongPollTimeout`). |
+| `void setLongPoll(uint8_t timeoutSeconds)` | Установка таймаута Long Polling (от 10 до 50 секунд). `0` отключает Long Polling (переход на short polling). Отключает интерактивное окно. |
+| `void setInterval(uint32_t intervalSeconds)` | Период опроса для short polling в секундах (например, `60` или `300`). Отменяет Long Polling и интерактивное окно. |
+| `void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20, uint16_t slowShortPollTimeout = 120)` | Включение интерактивного окна. На `windowSeconds` секунд после входящей команды бот переходит в быстрый Long Polling (`fastLongPollTimeout`) за тем возвращаясь на Short Polling (`slowShortPollTimeout`). Отключает Long и Short Polling. |
+| `void triggerInteractive()` | Принудительно активировать интерактивное окно. |
 | `bool isInteractive() const` | Проверка, активно ли сейчас интерактивное окно ускорения. |
 | `uint32_t getInteractiveRemaining() const` | Оставшееся время активности интерактивного окна (в секундах). |
 | `void setNext(uint32_t seconds = 0)` | Разовая пауза сетевых запросов на `seconds` секунд. `0` — отмена паузы. |

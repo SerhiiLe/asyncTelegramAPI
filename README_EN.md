@@ -240,9 +240,10 @@ The library supports three distinct polling modes:
 
 | Method | Description |
 | :--- | :--- |
-| `void setLongPoll(uint8_t timeoutSeconds)` | Set Long Polling timeout (10 to 50 seconds). `0` disables Long Polling (switches to short polling). |
-| `void setInterval(uint32_t intervalSeconds)` | Set short polling interval in seconds (e.g. `60` or `300`). |
-| `void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20)` | Enable interactive acceleration. On incoming commands, switches to fast Long Polling (`fastLongPollTimeout`) for `windowSeconds`. |
+| `void setLongPoll(uint8_t timeoutSeconds)` | Set Long Polling timeout (10 to 50 seconds). `0` disables Long Polling (switches to short polling). Disables the interactive window. |
+| `void setInterval(uint32_t intervalSeconds)` | Set short polling interval in seconds (e.g. `60` or `300`). Disables the Long Polling and interactive window. |
+| `void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20, uint16_t slowShortPollTimeout = 120)` | Enable interactive acceleration. On incoming commands, switches to fast Long Polling (`fastLongPollTimeout`) for `windowSeconds` before reverting to Short Polling (`slowShortPollTimeout`). Disables both Long and Short Polling. |
+| `void triggerInteractive()` | Forcefully activate the interactive window. |
 | `bool isInteractive() const` | Check whether the interactive window is currently active. |
 | `uint32_t getInteractiveRemaining() const` | Remaining time of the interactive window (in seconds). |
 | `void setNext(uint32_t seconds = 0)` | Pause all network requests for `seconds` seconds. `0` cancels pause. |

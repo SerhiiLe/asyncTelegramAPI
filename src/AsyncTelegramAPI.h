@@ -205,22 +205,36 @@ public:
     void setLongPoll(uint8_t timeoutSeconds) {
         if (timeoutSeconds == 0)
             _longPollTimeout = 0;
-        else
+        else {
             _longPollTimeout = constrain(timeoutSeconds, 10, 50);
+            // Явный setLongPoll отменяет интерактивный режим
+            _interactiveWindow = 0;
+            _activeUntil = 0;
+        }
     }
 
     // Настройка периода опроса для short polling (в секундах)
     void setInterval(uint32_t intervalSeconds) {
         _pollInterval = intervalSeconds * 1000UL;
+        _longPollTimeout = 0; // явный setInterval отключает LongPoll
+        _interactiveWindow = 0; // и интерактивное окно
     }
 
     // Настройка интерактивного окна: при получении команды бот переходит в Long Polling
     // на windowSeconds секунд с момента последнего сообщения
-    void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20) {
+    void setInteractiveWindow(uint32_t windowSeconds, uint8_t fastLongPollTimeout = 20, uint16_t slowShortPollTimeout = 120) {
         _interactiveWindow = windowSeconds;
-        if (fastLongPollTimeout < 10) _interactiveLongPoll = 10;
-        else if (fastLongPollTimeout > 50) _interactiveLongPoll = 50;
-        else _interactiveLongPoll = fastLongPollTimeout;
+        _interactiveLongPoll = constrain(fastLongPollTimeout, 10, 50);
+        _longPollTimeout = 0;  // В покое используем Short Polling (timeout=0)
+        _activeUntil = 0;      // До первого события находимся в покое
+        _pollInterval = slowShortPollTimeout * 1000UL;
+    }
+
+     // Принудительная активация интерактивного окна прямо сейчас (без ожидания входящих/исходящих)
+    void triggerInteractive() {
+        if (_interactiveWindow > 0) {
+            _activeUntil = millis() + (_interactiveWindow * 1000UL);
+        }
     }
 
     // Активно ли сейчас интерактивное окно
