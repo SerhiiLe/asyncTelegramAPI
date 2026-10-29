@@ -255,7 +255,7 @@ public:
             LOG_TELEGRAM_API(println, F("[TG] Pause cancelled. Resuming normal operations."));
         } else {
             _pauseUntil = millis() + (seconds * 1000UL);
-            LOG_TELEGRAM_API(printf_P, PSTR("[TG] Pausing ALL requests for %lu seconds.\n"), seconds);
+            LOG_TELEGRAM_API(printf_P, PSTR("[TG] Pausing ALL requests for %lu seconds.\n"), (long unsigned int)seconds);
             if (seconds > 50 || _client.connected()) {
                 _client.stop();
                 _state = TG_IDLE;
@@ -679,7 +679,7 @@ private:
             _setError(TG_ERR_CONNECTION);
             return false;
         }
-        LOG_TELEGRAM_API(printf_P, PSTR("[TG] TLS connected! Free heap: %lu bytes\n"), ESP.getFreeHeap());
+        LOG_TELEGRAM_API(printf_P, PSTR("[TG] TLS connected! Free heap: %lu bytes\n"), (long unsigned int)ESP.getFreeHeap());
         return true;
     }
 
@@ -1071,7 +1071,7 @@ private:
                 // Продление активного интерактивного окна
                 if (_interactiveWindow > 0) {
                     _activeUntil = millis() + (_interactiveWindow * 1000UL);
-                    LOG_TELEGRAM_API(printf_P, PSTR("[TG] Interactive window extended for %lu sec.\n"), _interactiveWindow);
+                    LOG_TELEGRAM_API(printf_P, PSTR("[TG] Interactive window extended for %lu sec.\n"), (long unsigned int)_interactiveWindow);
                 }
 
                 if (_callback) {
